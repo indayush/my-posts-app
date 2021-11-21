@@ -14,7 +14,6 @@ export default function Home() {
 			</Head>
 
 			<main className={styles.main}>
-				{/* <h1 className={styles.title}>My Posts</h1> */}
 				<Bio
 					headshot="https://pbs.twimg.com/profile_images/924397205246525440/JL7gtm8Y_400x400.jpg"
 					name="Ayush Adarsh"
