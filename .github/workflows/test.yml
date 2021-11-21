@@ -4,29 +4,27 @@
 name: AppliTools Test
 
 on:
-  push:
-    branches: [ master ]
-  pull_request:
-    branches: [ master ]
+        push:
+                branches: [master]
+        pull_request:
+                branches: [master]
 
 jobs:
-  test:
+        test:
+                runs-on: ubuntu-latest
 
-    runs-on: ubuntu-latest
+                strategy:
+                        matrix:
+                                node-version: [14.x]
+                                # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
-    strategy:
-      matrix:
-        node-version: [14.x]
-        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
-
-    steps:
-    - uses: actions/checkout@v2
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v2
-      with:
-        node-version: ${{ matrix.node-version }}
-        cache: 'npm'
-    - run: yarn install
-    - run: npx eyes-storybook
-      env: 
-          APPLITOOLS_API_KEY: ${{secrets.APPLITOOLS_API_KEY}}
+                steps:
+                        - uses: actions/checkout@v2
+                        - name: Use Node.js ${{ matrix.node-version }}
+                          uses: actions/setup-node@v2
+                          with:
+                                  node-version: ${{ matrix.node-version }}
+                        - run: yarn install
+                        - run: npx eyes-storybook
+                          env:
+                                  APPLITOOLS_API_KEY: ${{secrets.APPLITOOLS_API_KEY}}
