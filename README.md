@@ -1,3 +1,7 @@
+## Production Application Link:
+
+https://my-posts-indayush.netlify.app/
+
 ## run the development server:
 
 ```bash
