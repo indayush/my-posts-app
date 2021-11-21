@@ -29,3 +29,7 @@ yarn export
 ```
 
 Build Output in out folder
+
+## Applitools tests link
+
+https://eyes.applitools.com/
