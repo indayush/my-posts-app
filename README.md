@@ -41,3 +41,7 @@ https://eyes.applitools.com/
 ## Figma DEsign Link
 
 https://www.figma.com/file/jKC74uMwc3I2jjGwHxT1jc/My-Posts-Twitter-Clone
+
+## AirTable used as Database
+
+https://airtable.com/

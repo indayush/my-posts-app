@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { useAuth } from "../hooks/useAuth";
 import Head from "next/head";
 import styles from "../styles/Home.module.scss";
@@ -6,9 +7,19 @@ import PostForm from "../components/PostForm/PostForm";
 import Bio from "../components/Bio/Bio";
 import { logOut } from "../lib/auth";
 
-export default function Home() {
+export default function Home({ posts: defaultPosts }) {
 	const { user, logIn, logOut } = useAuth();
-	console.log("user", user);
+	const [posts, updatePosts] = useState(defaultPosts);
+
+	useEffect(() => {
+		async function run() {
+			const response = await fetch(
+				`${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/posts`,
+			);
+			const { posts } = await response.json();
+			updatePosts(posts);
+		}
+	}, []);
 
 	return (
 		<div className={styles.container}>
@@ -38,38 +49,40 @@ export default function Home() {
 					role="Automation Engineer @ Publicis Sapient"
 				/>
 				<ul className={styles.posts}>
-					<li>
-						<Post
-							content="Figma desigining tool to display the tweets
-							om my application"
-							date="November 21, 2021"
-						/>
-					</li>
-					<li>
-						<Post
-							content="Figma desigining tool to display the tweets
-							om my application"
-							date="November 21, 2021"
-						/>
-					</li>
-					<li>
-						<Post
-							content="Figma desigining tool to display the tweets
-							om my application"
-							date="November 21, 2021"
-						/>
-					</li>
-					<li>
-						<Post
-							content="Figma desigining tool to display the tweets
-							om my application"
-							date="November 21, 2021"
-						/>
-					</li>
+					{posts.map((post) => {
+						const { content, date, id } = post;
+						return (
+							<li key={id}>
+								<Post
+									content={content}
+									date={new Intl.DateTimeFormat(
+										"en-US",
+										{
+											dateStyle:
+												"full",
+											timeStyle:
+												"short",
+										},
+									).format(new Date(date))}
+								/>
+							</li>
+						);
+					})}
 				</ul>
 
 				{user && <PostForm />}
 			</main>
 		</div>
 	);
+}
+
+export async function getStaticProps() {
+	const response = await fetch(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/posts`);
+	const { posts } = await response.json();
+
+	return {
+		props: {
+			posts,
+		},
+	};
 }
