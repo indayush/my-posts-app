@@ -5,35 +5,24 @@ import styles from "../styles/Home.module.scss";
 import Post from "../components/Post/Post";
 import PostForm from "../components/PostForm/PostForm";
 import Bio from "../components/Bio/Bio";
-import { logOut } from "../lib/auth";
+// import { logOut } from "../lib/auth";
+import { getAllPosts, createPost } from "../lib/posts";
 
 export default function Home({ posts: defaultPosts }) {
 	const [posts, updatePosts] = useState(defaultPosts);
 
-	// useEffect(() => {
-	// 	async function run() {
-	// 		const response = await fetch(
-	// 			`${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/posts`,
-	// 		);
-	// 		const { posts } = await response.json();
-	// 		updatePosts(posts);
-	// 	}
-	// }, []);
-
 	const { user, logIn, logOut } = useAuth();
+
+	const postsSorted = posts.sort(function (a, b) {
+		return new Date(b.date) - new Date(a.date);
+	});
 
 	async function handleOnSubmit(data, e) {
 		e.preventDefault();
 
-		const response = await fetch(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/posts`, {
-			method: "POST",
-			body: JSON.stringify(data),
-		});
+		await createPost(data);
 
-		const responseGet = await fetch(
-			`${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/posts`,
-		);
-		const { posts } = await responseGet.json();
+		const posts = await getAllPosts();
 		updatePosts(posts);
 	}
 
@@ -65,7 +54,7 @@ export default function Home({ posts: defaultPosts }) {
 					role="Automation Engineer @ Publicis Sapient"
 				/>
 				<ul className={styles.posts}>
-					{posts.map((post) => {
+					{postsSorted.map((post) => {
 						const { content, date, id } = post;
 						return (
 							<li key={id}>
@@ -93,8 +82,7 @@ export default function Home({ posts: defaultPosts }) {
 }
 
 export async function getStaticProps() {
-	const response = await fetch(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/posts`);
-	const { posts } = await response.json();
+	const posts = await getAllPosts();
 
 	return {
 		props: {

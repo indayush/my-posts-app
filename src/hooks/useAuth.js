@@ -22,14 +22,14 @@ export const AuthProvider = ({ children }) => {
 		authLogin((user) => {
 			setUser(user);
 		});
-		console.log("Log In");
+		// console.log("Log In");
 	}
 
 	function logOut() {
 		authLogOut((user) => {
 			setUser(undefined);
 		});
-		console.log("Log In");
+		// console.log("Log In");
 	}
 
 	const contextValue = { user, logIn, logOut };
