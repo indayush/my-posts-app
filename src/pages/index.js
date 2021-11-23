@@ -8,18 +8,34 @@ import Bio from "../components/Bio/Bio";
 import { logOut } from "../lib/auth";
 
 export default function Home({ posts: defaultPosts }) {
-	const { user, logIn, logOut } = useAuth();
 	const [posts, updatePosts] = useState(defaultPosts);
 
-	useEffect(() => {
-		async function run() {
-			const response = await fetch(
-				`${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/posts`,
-			);
-			const { posts } = await response.json();
-			updatePosts(posts);
-		}
-	}, []);
+	// useEffect(() => {
+	// 	async function run() {
+	// 		const response = await fetch(
+	// 			`${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/posts`,
+	// 		);
+	// 		const { posts } = await response.json();
+	// 		updatePosts(posts);
+	// 	}
+	// }, []);
+
+	const { user, logIn, logOut } = useAuth();
+
+	async function handleOnSubmit(data, e) {
+		e.preventDefault();
+
+		const response = await fetch(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/posts`, {
+			method: "POST",
+			body: JSON.stringify(data),
+		});
+
+		const responseGet = await fetch(
+			`${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/posts`,
+		);
+		const { posts } = await responseGet.json();
+		updatePosts(posts);
+	}
 
 	return (
 		<div className={styles.container}>
@@ -70,7 +86,7 @@ export default function Home({ posts: defaultPosts }) {
 					})}
 				</ul>
 
-				{user && <PostForm />}
+				{user && <PostForm onSubmit={handleOnSubmit} />}
 			</main>
 		</div>
 	);
